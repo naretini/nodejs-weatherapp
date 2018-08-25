@@ -4,28 +4,39 @@ Given a cities DB, get city info by id , get weather info for a city by id, find
 ## Docker
 
 ### Build Image
+```bash
 $ docker build -t naretini/node-weather-web-app .
+```
 
 ### Run Image
-$ docker run -p 49163:8078 -d naretini/node-weather-web-app
+```bash
+$ docker run -p 49163:8080 -d naretini/node-weather-web-app
+```
 
 
 ### Test service root
+```bash
 $ curl -i localhost:49163
+```
 
-### Run tests
+## Run mocha tests locally
+```bash
 $ npm test
+```
 
-
-
+### Test API
+Please find PostMan collection file Weather-service.postman_collection.json
+To test app endpoints through Postman app.
 
 ## Modules 
-"geopoint": (http://janmatuschek.de/LatitudeLongitudeBoundingCoordinates) (https://github.com/davidwood/node-geopoint)
-"request": (https://github.com/request/request)
-"restify": (http://restify.com/)
+* "geopoint": (http://janmatuschek.de/LatitudeLongitudeBoundingCoordinates) (https://github.com/davidwood/node-geopoint)
+* "request": (https://github.com/request/request)
+* "restify": (http://restify.com/)
+* "mocha": (https://mochajs.org/)
 
 # External API
-http://openweathermap.org/ API
+* City data info from file: http://bulk.openweathermap.org/sample/city.list.json.gz
+* Weather info from http://openweathermap.org/ API
 
 ## Routes Endpoints
 The following routes should be provided by the service. All the routes should deliver the response as json and indicate the response type with the proper content type.
