@@ -25,4 +25,34 @@ describe('App_utils', function () {
             assert.equal(app_utils_1.validCoordinates(-3.243, 4.3450), true);
         });
     });
+
+    describe('#getCityById()', function () {
+        it('should return a city', function () {
+            assert.equal(JSON.stringify(app_utils_1.getCityById(707860)),
+                JSON.stringify({
+                    "id": 707860,
+                    "name": "Hurzuf",
+                    "lon": 34.283333,
+                    "lat": 44.549999
+                }));
+
+        });
+
+        it('should return a null on non existend id', function () {
+            assert.equal(JSON.stringify(app_utils_1.getCityById(725453407860)),
+                JSON.stringify(null));
+
+        });
+        it('should return a null on NaN', function () {
+            assert.equal(JSON.stringify(app_utils_1.getCityById('23d323d')),
+                JSON.stringify(null));
+            assert.equal(JSON.stringify(app_utils_1.getCityById('234')),
+                JSON.stringify(null));
+            assert.equal(JSON.stringify(app_utils_1.getCityById(false)),
+                JSON.stringify(null));
+            assert.equal(JSON.stringify(app_utils_1.getCityById(undefined)),
+                JSON.stringify(null));
+
+        });
+    });
 });

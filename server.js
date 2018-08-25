@@ -1,5 +1,9 @@
 var restify = require('restify');
-var  geo_utils = require('./app_utils');
+var geo_utils = require('./app_utils');
+
+
+
+
 
 var server = restify.createServer();
 server.use(restify.plugins.queryParser());
@@ -24,15 +28,31 @@ function cities_findbyLoc(req, res, next) {
             "message": "lat/lng required"
         });
         next();
-
     }
-
 }
 
 
 
+
+
 server.get('/cities', cities_findbyLoc);
-// server.get('/cities/{city_id}', city_get);
+
+
+
+server.get('/cities/:city_id', function (req, res, next) {
+    var city = geo_utils.getCityById(req.params.city_id);
+    if(city){
+        res.send(200, city);
+    }else{
+        //400 parameters wrong or missing
+        res.send(404, {
+            "code": "NotFoundError",
+            "message": "not found"
+        });
+        
+    }
+    next();
+});
 
 
 server.listen(8080, function () {
