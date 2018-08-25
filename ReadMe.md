@@ -1,25 +1,30 @@
-##Docker
+# Cities-Wheather app nodejs
+Given a cities DB, get city info by id , get weather info for a city by id, find cities in a radius of 10km (based on openweathermap.org API)
 
-###Build Image
+## Docker
+
+### Build Image
 $ docker build -t naretini/node-weather-web-app .
 
-###Run Image
+### Run Image
 $ docker run -p 49163:8078 -d naretini/node-weather-web-app
 
 
-###Test service root
+### Test service root
 $ curl -i localhost:49163
 
-###Run tests
+### Run tests
 $ npm test
 
 
-##Modules 
+
+
+## Modules 
 "geopoint": (http://janmatuschek.de/LatitudeLongitudeBoundingCoordinates) (https://github.com/davidwood/node-geopoint)
 "request": (https://github.com/request/request)
 "restify": (http://restify.com/)
 
-#External API
+# External API
 http://openweathermap.org/ API
 
 ## Routes Endpoints
