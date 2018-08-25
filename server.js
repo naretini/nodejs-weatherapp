@@ -1,9 +1,8 @@
 var restify = require('restify');
-var geo_utils = require('./app_utils');
 var request = require('request');
+var GeoPoint = require('geopoint');
 
-
-
+var geo_utils = require('./app_utils');
 
 
 var server = restify.createServer();
@@ -40,11 +39,17 @@ function responseNotFound(res){
 }
 
 
-
+/**
+ * `GET /cities?lat={latitude}&lng={longitude}`
+ * List the available cities around the specified latitude/longitude 
+ * within a radius of 10 kilometers 
+ * Example: http://localhost:8080/cities?lat=49.48&lng=8.46
+ */
 server.get('/cities', cities_findbyLoc);
 
 
 /** 
+ * `GET /cities/{city_id}`
  * Retrieve the details for a city (by city_id) Example: http://localhost:8080/cities/2873891
  */
 server.get('/cities/:city_id', function (req, res, next) {
@@ -58,6 +63,7 @@ server.get('/cities/:city_id', function (req, res, next) {
 });
 
 /**
+ * `GET /cities/{city_id}/weather`
  * Retrieve the weather data for a city (by city_id) Example: http://localhost:8080/cities/2873891/weather
  */
 server.get('/cities/:city_id/weather', function (req, res, next) {
