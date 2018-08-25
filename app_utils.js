@@ -12,17 +12,30 @@ exports.validCoordinates = (latitude, longitude)  => {
 
     let lat = latitude;
     let lng = longitude;
-
+    console.log(lng != 0 && !lng)
+    console.log(isNaN(lng))
     if (
-        !lat || !lng
-        ||
+        (lat!=0 && !lat )|| 
+        (lng!=0 && !lng) ||
         (isNaN(lat) || isNaN(lng))
         
     ){
         return false;
     }
+
+    MAX_LAT = Math.PI / 2, // 90 degrees
+    MIN_LAT = -MAX_LAT, // -90 degrees
+    MAX_LON = Math.PI, // 180 degrees
+    MIN_LON = -MAX_LON; // -180 degrees
+
+    radLat = GeoPoint.degreesToRadians(parseFloat(lat));
+    radLng = GeoPoint.degreesToRadians(parseFloat(lng));
+    console.log('Lat lng radlat radlng: ', lat, radLat, lng, radLng);
+    if (radLat < MIN_LAT || radLat > MAX_LAT || radLng < MIN_LON || radLng > MAX_LON) {
+        console.log('Lat or Lng out of bounds', lat,radLat, lng, radLng);
+        return false;
+    }
     return  true;
-    
 
 }
 
@@ -50,7 +63,7 @@ exports.getCitiesWithin10KmDistance = (lat_frm, lng_frm) => {
         // console.log(item.coord);
         // console.log('LAT', item.coord.lat, 'LONG', item.coord.lon);
         let distance = module.exports.getDistance(lat_frm,lng_frm,item.coord.lat, item.coord.lon);
-        
+
         if (distance>=0 && distance<10){
             console.log(item.name, item.country, item.coord.lat, item.coord.lon)
             return true;
@@ -66,10 +79,17 @@ exports.getCitiesWithin10KmDistance = (lat_frm, lng_frm) => {
     return arrayFound;
 }
 
-
+exports.convertKelvinToCelsius = (kelvin) => {
+    if (kelvin < (0)) {
+        return 'below absolute zero (0 K)';
+    } else {
+        return Math.round(kelvin - 273.15);
+    }
+}
 
 /**
- * expected
+ * Mapping API response to
+ * expected obj
  {
   "type": "Clear",
   "type_description": "clear sky",
@@ -86,17 +106,33 @@ exports.getCitiesWithin10KmDistance = (lat_frm, lng_frm) => {
  */
 exports.parseAPIWeatherResponse = (jsonRes) => {
     var answer = {}
-    answer.type             = jsonRes.weather[0].main;
-    answer.type_description = jsonRes.weather[0].description;
-    answer.sunrise          = new Date(jsonRes.sys.sunrise * 1000).toISOString();
-    answer.sunset           = new Date(jsonRes.sys.sunset * 1000).toISOString();
-    answer.temp             = jsonRes.main.temp;
-    answer.temp_min         = jsonRes.main.temp_min;
-    answer.temp_max         = jsonRes.main.temp_max;
-    answer.pressure         = jsonRes.main.pressure;
-    answer.humidity         = jsonRes.main.humidity;
-    answer.clouds_percent   = jsonRes.clouds.all;  
-    answer.wind_speed       = jsonRes.wind.speed;
+    if(jsonRes){
+        if (jsonRes.weather && jsonRes.weather[0]) {
+            answer.type             = jsonRes.weather[0].main;
+            answer.type_description = jsonRes.weather[0].description;
+        }
+
+        if (jsonRes.sys){
+            answer.sunrise          = new Date(jsonRes.sys.sunrise * 1000).toISOString();
+            answer.sunset           = new Date(jsonRes.sys.sunset * 1000).toISOString();
+        }
+
+        if(jsonRes.main){
+            answer.temp             = module.exports.convertKelvinToCelsius(jsonRes.main.temp);
+            answer.temp_min         = module.exports.convertKelvinToCelsius(jsonRes.main.temp_min);
+            answer.temp_max         = module.exports.convertKelvinToCelsius(jsonRes.main.temp_max);
+            answer.pressure         = jsonRes.main.pressure;
+            answer.humidity         = jsonRes.main.humidity;
+
+        }
+        if (jsonRes.main) {
+            answer.clouds_percent   = jsonRes.clouds.all;  
+        }
+        
+        if (jsonRes.main) {
+            answer.wind_speed       = jsonRes.wind.speed;
+        }
+    }
 
 
     return answer;
