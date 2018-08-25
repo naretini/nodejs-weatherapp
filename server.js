@@ -1,5 +1,5 @@
 var restify = require('restify');
-
+var  geo_utils = require('./app_utils');
 
 var server = restify.createServer();
 server.use(restify.plugins.queryParser());
@@ -7,10 +7,26 @@ server.use(restify.plugins.queryParser());
 
 
 function cities_findbyLoc(req, res, next) {
-    res.send(200, {
-        message: 'Valid '
-    });
-    
+    //200 ok
+    let lat = req.query.lat || null;
+    let lng = req.query.lng || null;
+    if (geo_utils.validCoordinates(lat, lng)) {
+        res.send(200, {
+            message: 'Valid coordinates',
+            lat: lat,
+            lng: lng
+        });
+        next();
+    } else {
+        //400 parameters wrong or missing
+        res.send(400, {
+            "code": "BadRequestError",
+            "message": "lat/lng required"
+        });
+        next();
+
+    }
+
 }
 
 
