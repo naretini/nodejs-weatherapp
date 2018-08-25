@@ -85,4 +85,60 @@ describe('App_utils', function () {
 
         });
     });
+    describe('#getDistance()', function () {
+        it('should get expected distance', function () {
+            /*
+            Liberty Island
+            Stati Uniti
+            40.689404, -74.044243
+            Unnamed Road
+            Jersey City, NJ 07305, Stati Uniti
+            40.699166, -74.067323
+            */
+             
+            assert.equal(
+                app_utils_1.getDistance(40.689404, -74.044243, 40.699166, -74.067323), 2.228123698784625
+            );
+        });
+    });
+
+    describe('#getCitiesWithin10KmDistance()', function () {
+        it('should get a list long as expected', function () {
+            /*
+            Liberty Island
+            Stati Uniti
+            40.689404, -74.044243
+            */
+            var list = app_utils_1.getCitiesWithin10KmDistance(40.689404, -74.044243);
+            console.log(list);
+
+            assert.equal(
+                list.length, 9
+            );
+        });
+
+
+        it('should get a list long as expected', function () {
+            /*
+            Venezia
+            30173 VE
+            45.472912, 12.274660
+            */
+            var list = app_utils_1.getCitiesWithin10KmDistance(45.472912, 12.274660);
+            console.log(list);
+
+            assert.equal(
+                list.length, 11
+            );
+        });
+        it('should work with float numbers as strings (by url)', function () {
+            
+            var list = app_utils_1.getCitiesWithin10KmDistance('44.549999', '34.283333');
+            console.log(list);
+
+            assert.equal(
+                list.length, 15
+            );
+        });
+    });
 });

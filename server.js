@@ -15,11 +15,8 @@ function cities_findbyLoc(req, res, next) {
     let lat = req.query.lat || null;
     let lng = req.query.lng || null;
     if (geo_utils.validCoordinates(lat, lng)) {
-        res.send(200, {
-            message: 'Valid coordinates',
-            lat: lat,
-            lng: lng
-        });
+        
+        res.send(200, geo_utils.getCitiesWithin10KmDistance(lat, lng));
         next();
     } else {
         //400 parameters wrong or missing
@@ -55,7 +52,12 @@ server.get('/cities', cities_findbyLoc);
 server.get('/cities/:city_id', function (req, res, next) {
     var city = geo_utils.getCityById(req.params.city_id);
     if (city) {
-        res.send(200, city);
+        res.send(200, {
+            "id"    : city.id,
+            "name"  : city.name,
+            "lng"   : city.lon,
+            "lat"   : city.lat
+        });
     } else {
         responseNotFound(res);
     }

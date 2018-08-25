@@ -1,6 +1,7 @@
 
 
 var citiesDb = require('./data/city.list.json');
+var GeoPoint = require('geopoint');
 
 /**
  * 
@@ -24,6 +25,48 @@ exports.validCoordinates = (latitude, longitude)  => {
     
 
 }
+
+exports.getDistance = (lat_frm, lng_frm, lat_to, lng_to, inKm = true) => {
+    
+    try {
+        pointA = new GeoPoint(parseFloat(lat_frm), parseFloat(lng_frm));
+        pointB = new GeoPoint(parseFloat(lat_to), parseFloat(lng_to));
+        let distance = pointA.distanceTo(pointB, inKm);
+        return distance;
+    }
+    catch (err) {
+        console.log(typeof lat_to)
+        console.log("----------------------- ERROR ON", err)
+        console.log("lat_frm:", lat_frm, "lng_frm:", lng_frm, "lat_to:", lat_to, "lng_to:", lng_to, "inKm:", inKm )
+        return -1; 
+    }
+    
+}
+
+
+exports.getCitiesWithin10KmDistance = (lat_frm, lng_frm) => {
+    console.log(lat_frm, lng_frm);
+    var arrayFound = citiesDb.filter(function (item) {
+        // console.log(item.coord);
+        // console.log('LAT', item.coord.lat, 'LONG', item.coord.lon);
+        let distance = module.exports.getDistance(lat_frm,lng_frm,item.coord.lat, item.coord.lon);
+        
+        if (distance>=0 && distance<10){
+            console.log(item.name, item.country, item.coord.lat, item.coord.lon)
+            return true;
+        }
+        return false;
+    }).map(function (obj) {
+        var rObj = {};
+        rObj['id'] = obj.id;
+        rObj['name'] = obj.name;
+        return rObj;
+    });
+    
+    return arrayFound;
+}
+
+
 
 /**
  * expected
@@ -52,7 +95,7 @@ exports.parseAPIWeatherResponse = (jsonRes) => {
     answer.temp_max         = jsonRes.main.temp_max;
     answer.pressure         = jsonRes.main.pressure;
     answer.humidity         = jsonRes.main.humidity;
-    answer.clouds_percent   = jsonRes.clouds.all;   //??
+    answer.clouds_percent   = jsonRes.clouds.all;  
     answer.wind_speed       = jsonRes.wind.speed;
 
 

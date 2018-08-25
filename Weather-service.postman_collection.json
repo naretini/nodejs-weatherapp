@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "8d51eee4-c9d7-41b2-ab87-d9df2f268e5c",
+		"name": "Weather-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "### `GET /cities?lat={latitude}&lng={longitude}`",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:49163/cities?lat=45.4044576&lng=12.2416607",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "49163",
+					"path": [
+						"cities"
+					],
+					"query": [
+						{
+							"key": "lat",
+							"value": "45.4044576"
+						},
+						{
+							"key": "lng",
+							"value": "12.2416607"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "### `GET /cities/{city_id}`",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:49163/cities/6542284",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "49163",
+					"path": [
+						"cities",
+						"6542284"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "### `GET /cities/{city_id}/weather`",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:49163/cities/6542284/weather",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "49163",
+					"path": [
+						"cities",
+						"6542284",
+						"weather"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
