@@ -70,16 +70,13 @@ server.get('/cities/:city_id', function (req, res, next) {
  */
 server.get('/cities/:city_id/weather', function (req, res, next) {
     var city = geo_utils.getCityById(req.params.city_id);
-    console.log(city)
     if (city && city.id) {
         var APPID = 'dce868f2d5d78510621eeae7bbcf971e';
         var endpoint = 'http://api.openweathermap.org/data/2.5/weather?APPID=' + APPID + '&id=' + city.id;
         request(endpoint, function (error, response, body) {
             if (response && response.statusCode == 200) {
-                console.log('si', response.body);
                 res.send(200, geo_utils.parseAPIWeatherResponse(JSON.parse(response.body)));
             } else {
-                console.log('no');
                 responseNotFound(res);
             }
         });
@@ -96,15 +93,12 @@ server.get('/cities/:city_id/weather', function (req, res, next) {
 server.get('/cities/weather', function (req, res, next) {
         var citiesDb = require('./data/city.list.json');
         var city = citiesDb[Math.floor(Math.random() * citiesDb.length)];
-console.log(city.id, city.name, city.country);
         var APPID = 'dce868f2d5d78510621eeae7bbcf971e';
         var endpoint = 'http://api.openweathermap.org/data/2.5/weather?APPID=' + APPID + '&id=' + city.id;
         request(endpoint, function (error, response, body) {
             if (response && response.statusCode == 200) {
-                console.log('si', response.body);
                 res.send(200, geo_utils.parseAPIWeatherResponse(JSON.parse(response.body)));
             } else {
-                console.log('no');
                 responseNotFound(res);
             }
         });
@@ -118,3 +112,6 @@ console.log(city.id, city.name, city.country);
 server.listen(8080, function () {
     console.log("Server listening ...");
 });
+
+
+module.exports = server;

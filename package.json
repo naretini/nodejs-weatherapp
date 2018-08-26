@@ -9,6 +9,8 @@
         "test": "mocha"
     },
     "dependencies": {
+        "chai": "^4.1.2",
+        "chai-http": "^4.0.0",
         "express": "^4.14.1",
         "geopoint": "^1.0.1",
         "request": "^2.88.0",

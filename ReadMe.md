@@ -33,6 +33,7 @@ To test app endpoints through Postman app.
 * "request": (https://github.com/request/request)
 * "restify": (http://restify.com/)
 * "mocha": (https://mochajs.org/)
+* "chai" : (http://www.chaijs.com/)
 
 # External API
 * City data info from file: http://bulk.openweathermap.org/sample/city.list.json.gz

@@ -1,10 +1,11 @@
-
-
+/**
+ * Cities Json data
+ */
 var citiesDb = require('./data/city.list.json');
 var GeoPoint = require('geopoint');
 
 /**
- * 
+ * Returns boolean: true if lat lng aren't null and valid
  * @param latitude 
  * @param longitude 
  */
@@ -12,8 +13,7 @@ exports.validCoordinates = (latitude, longitude)  => {
 
     let lat = latitude;
     let lng = longitude;
-    console.log(lng != 0 && !lng)
-    console.log(isNaN(lng))
+    
     if (
         (lat!=0 && !lat )|| 
         (lng!=0 && !lng) ||
@@ -30,7 +30,7 @@ exports.validCoordinates = (latitude, longitude)  => {
 
     radLat = GeoPoint.degreesToRadians(parseFloat(lat));
     radLng = GeoPoint.degreesToRadians(parseFloat(lng));
-    console.log('Lat lng radlat radlng: ', lat, radLat, lng, radLng);
+    // console.log('Lat lng radlat radlng: ', lat, radLat, lng, radLng);
     if (radLat < MIN_LAT || radLat > MAX_LAT || radLng < MIN_LON || radLng > MAX_LON) {
         console.log('Lat or Lng out of bounds', lat,radLat, lng, radLng);
         return false;
@@ -39,8 +39,17 @@ exports.validCoordinates = (latitude, longitude)  => {
 
 }
 
+/**
+ * 
+ * Return -1|Distance in km 
+ * 
+ * @param {Number} lat_frm 
+ * @param {Number} lng_frm 
+ * @param {Number} lat_to 
+ * @param {Number} lng_to 
+ * @param {Number} inKm 
+ */
 exports.getDistance = (lat_frm, lng_frm, lat_to, lng_to, inKm = true) => {
-    
     try {
         pointA = new GeoPoint(parseFloat(lat_frm), parseFloat(lng_frm));
         pointB = new GeoPoint(parseFloat(lat_to), parseFloat(lng_to));
@@ -48,7 +57,6 @@ exports.getDistance = (lat_frm, lng_frm, lat_to, lng_to, inKm = true) => {
         return distance;
     }
     catch (err) {
-        console.log(typeof lat_to)
         console.log("----------------------- ERROR ON", err)
         console.log("lat_frm:", lat_frm, "lng_frm:", lng_frm, "lat_to:", lat_to, "lng_to:", lng_to, "inKm:", inKm )
         return -1; 
@@ -56,16 +64,20 @@ exports.getDistance = (lat_frm, lng_frm, lat_to, lng_to, inKm = true) => {
     
 }
 
-
+/**
+ * 
+ * Return Array[cityObj]
+ * 
+ * @param {Number} lat_frm 
+ * @param {Number} lng_frm 
+ */
 exports.getCitiesWithin10KmDistance = (lat_frm, lng_frm) => {
-    console.log(lat_frm, lng_frm);
     var arrayFound = citiesDb.filter(function (item) {
-        // console.log(item.coord);
-        // console.log('LAT', item.coord.lat, 'LONG', item.coord.lon);
+        
         let distance = module.exports.getDistance(lat_frm,lng_frm,item.coord.lat, item.coord.lon);
 
         if (distance>=0 && distance<10){
-            console.log(item.name, item.country, item.coord.lat, item.coord.lon)
+            // console.log(item.name, item.country, item.coord.lat, item.coord.lon)
             return true;
         }
         return false;
@@ -79,9 +91,14 @@ exports.getCitiesWithin10KmDistance = (lat_frm, lng_frm) => {
     return arrayFound;
 }
 
+/**
+ * Return Integer °C
+ * 
+ * @param {Number} kelvin 
+ */
 exports.convertKelvinToCelsius = (kelvin) => {
     if (kelvin < (0)) {
-        return 'below absolute zero (0 K)';
+        return 0;
     } else {
         return Math.round(kelvin - 273.15);
     }
@@ -90,19 +107,23 @@ exports.convertKelvinToCelsius = (kelvin) => {
 /**
  * Mapping API response to
  * expected obj
- {
-  "type": "Clear",
-  "type_description": "clear sky",
-  "sunrise": "2016-08-23T08:00:00.000Z",
-  "sunset": "2016-08-23T22:00:00.000Z",
-  "temp": 29.72,
-  "temp_min": 26.67,
-  "temp_max": 35,
-  "pressure": 1026,
-  "humidity": 36,
-  "clouds_percent": 0,
-  "wind_speed": 1.5
-}
+ * {
+ *  "type": "Clear",
+ *  "type_description": "clear sky",
+ *  "sunrise": "2016-08-23T08:00:00.000Z",
+ *  "sunset": "2016-08-23T22:00:00.000Z",
+ *  "temp": 29.72,
+ *  "temp_min": 26.67,
+ *  "temp_max": 35,
+ *  "pressure": 1026,
+ *  "humidity": 36,
+ *  "clouds_percent": 0,
+ *  "wind_speed": 1.5
+ * }
+ * 
+ * Returns the expected object
+ * 
+ * @param {JSON} jsonRes
  */
 exports.parseAPIWeatherResponse = (jsonRes) => {
     var answer = {}
@@ -139,9 +160,8 @@ exports.parseAPIWeatherResponse = (jsonRes) => {
 }
 
 
-
-
 /**
+ * Return null|city object 
  * 
  * @param {number} idCity 
  */
@@ -166,23 +186,18 @@ exports.getCityById = (idCity) => {
     return response;
 }
 
-
+/**
+ * Returns null|object API response
+ * @param {number} idCity 
+ */
 exports.getWeatherByCityId = (cityId) => {
     var APPID       = 'dce868f2d5d78510621eeae7bbcf971e';
     var endpoint    = 'http://api.openweathermap.org/data/2.5/weather?APPID=' + APPID + '&id=' + cityId;
     
-
     request(endpoint, function (error, response, body) {
-        // console.log('error:', error); // Print the error if one occurred
-        // console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-        // console.log('body:', body); // Print the HTML for the Google homepage.
-
         if (response && response.statusCode == 200) {
-            
-            console.log('si', response.body);
             return JSON.parse(response.body);
         } else {
-            console.log('no');
             return false;
         }
     });

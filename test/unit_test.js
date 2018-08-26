@@ -3,6 +3,7 @@ var assert = require('assert');
 const app_utils_1 = require("../app_utils");
 
 describe('App_utils', function () {
+
     describe('#validCoordinates()', function () {
         it('should return false when a value is not present or not a number', function () {
             assert.equal(app_utils_1.validCoordinates(null, 3.45), false);
@@ -32,8 +33,83 @@ describe('App_utils', function () {
             assert.equal(app_utils_1.validCoordinates(-3.243, 444.3450), false);
         });
     });
-
    
+    
+    describe('#getDistance()', function () {
+        it('should get expected distance', function () {
+            /*
+            Liberty Island
+            Stati Uniti
+            40.689404, -74.044243
+            Unnamed Road
+            Jersey City, NJ 07305, Stati Uniti
+            40.699166, -74.067323
+            */
+
+            assert.equal(
+                app_utils_1.getDistance(40.689404, -74.044243, 40.699166, -74.067323), 2.228123698784625
+            );
+        });
+    });
+
+
+    describe('#getCitiesWithin10KmDistance()', function () {
+        it('should get a list long as expected', function () {
+            /*
+            Liberty Island
+            Stati Uniti
+            40.689404, -74.044243
+            */
+            var list = app_utils_1.getCitiesWithin10KmDistance(40.689404, -74.044243);
+            assert.equal(
+                list.length, 9
+            );
+        });
+
+
+        it('should get a list long as expected', function () {
+            /*
+            Venezia
+            30173 VE
+            45.472912, 12.274660
+            */
+            var list = app_utils_1.getCitiesWithin10KmDistance(45.472912, 12.274660);
+            assert.equal(
+                list.length, 11
+            );
+        });
+        it('should work with float numbers as strings (by url)', function () {
+
+            var list = app_utils_1.getCitiesWithin10KmDistance('44.549999', '34.283333');
+            assert.equal(
+                list.length, 15
+            );
+        });
+    });
+
+
+    describe('#convertKelvinToCelsius()', function () {
+        it('should get expected °C', function () {
+            assert.equal(
+                app_utils_1.convertKelvinToCelsius(280), 7
+            );
+        });
+    });
+
+
+    describe('#parseAPIWeatherResponse()', function () {
+        it('should parse JSON correctly', function () {
+            var input = { "coord": { "lon": -82.41, "lat": 27.07 }, "weather": [{ "id": 800, "main": "Clear", "description": "clear sky", "icon": "01d" }], "base": "stations", "main": { "temp": 297.55, "pressure": 1018, "humidity": 88, "temp_min": 297.05, "temp_max": 298.15 }, "visibility": 16093, "wind": { "speed": 4.1, "deg": 80 }, "clouds": { "all": 1 }, "dt": 1535199300, "sys": { "type": 1, "id": 731, "message": 0.0128, "country": "US", "sunrise": 1535195162, "sunset": 1535241398 }, "id": 4176387, "name": "Venice Gardens", "cod": 200 };
+            var expected_output = { "type": "Clear", "type_description": "clear sky", "sunrise": "2018-08-25T11:06:02.000Z", "sunset": "2018-08-25T23:56:38.000Z", "temp": 24, "temp_min": 24, "temp_max": 25, "pressure": 1018, "humidity": 88, "clouds_percent": 1, "wind_speed": 4.1 };
+
+            assert.equal(
+                JSON.stringify(JSON.parse(JSON.stringify(app_utils_1.parseAPIWeatherResponse(input)))),
+                JSON.stringify(JSON.parse(JSON.stringify(expected_output))));
+
+        });
+    });
+
+
     describe('#getCityById()', function () {
         it('should return a city', function () {
             assert.equal(
@@ -65,75 +141,5 @@ describe('App_utils', function () {
         });
     });
 
-
-
-    describe('#parseAPIWeatherResponse()', function () {
-        it('should parse JSON correctly', function () {
-            var input = { "coord": { "lon": -82.41, "lat": 27.07 }, "weather": [{ "id": 800, "main": "Clear", "description": "clear sky", "icon": "01d" }], "base": "stations", "main": { "temp": 297.55, "pressure": 1018, "humidity": 88, "temp_min": 297.05, "temp_max": 298.15 }, "visibility": 16093, "wind": { "speed": 4.1, "deg": 80 }, "clouds": { "all": 1 }, "dt": 1535199300, "sys": { "type": 1, "id": 731, "message": 0.0128, "country": "US", "sunrise": 1535195162, "sunset": 1535241398 }, "id": 4176387, "name": "Venice Gardens", "cod": 200 };
-            var expected_output = { "type": "Clear", "type_description": "clear sky", "sunrise": "2018-08-25T11:06:02.000Z", "sunset": "2018-08-25T23:56:38.000Z", "temp": 24, "temp_min": 24, "temp_max": 25, "pressure": 1018, "humidity": 88, "clouds_percent": 1, "wind_speed": 4.1 };
-
-          
-
-            assert.equal(
-                JSON.stringify(JSON.parse(JSON.stringify(app_utils_1.parseAPIWeatherResponse(input)))),
-                JSON.stringify(JSON.parse(JSON.stringify(expected_output))));
-
-        });
-    });
-    describe('#getDistance()', function () {
-        it('should get expected distance', function () {
-            /*
-            Liberty Island
-            Stati Uniti
-            40.689404, -74.044243
-            Unnamed Road
-            Jersey City, NJ 07305, Stati Uniti
-            40.699166, -74.067323
-            */
-             
-            assert.equal(
-                app_utils_1.getDistance(40.689404, -74.044243, 40.699166, -74.067323), 2.228123698784625
-            );
-        });
-    });
-
-    describe('#getCitiesWithin10KmDistance()', function () {
-        it('should get a list long as expected', function () {
-            /*
-            Liberty Island
-            Stati Uniti
-            40.689404, -74.044243
-            */
-            var list = app_utils_1.getCitiesWithin10KmDistance(40.689404, -74.044243);
-            console.log(list);
-
-            assert.equal(
-                list.length, 9
-            );
-        });
-
-
-        it('should get a list long as expected', function () {
-            /*
-            Venezia
-            30173 VE
-            45.472912, 12.274660
-            */
-            var list = app_utils_1.getCitiesWithin10KmDistance(45.472912, 12.274660);
-            console.log(list);
-
-            assert.equal(
-                list.length, 11
-            );
-        });
-        it('should work with float numbers as strings (by url)', function () {
-            
-            var list = app_utils_1.getCitiesWithin10KmDistance('44.549999', '34.283333');
-            console.log(list);
-
-            assert.equal(
-                list.length, 15
-            );
-        });
-    });
+  
 });
