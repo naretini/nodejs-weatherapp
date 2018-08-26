@@ -4,6 +4,11 @@
     "description": "Wheather web app with Node.js on Docker",
     "author": "Nicola Aretini <nicoaretini@gmail.com>",
     "main": "server.js",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/naretini/nodejs-weatherapp.git"
+    },
+    "license": "MIT",
     "scripts": {
         "start": "node server.js",
         "test": "mocha"
