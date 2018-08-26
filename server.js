@@ -2,6 +2,7 @@ var config = require('config');
 var restify = require('restify');
 var request = require('request');
 var GeoPoint = require('geopoint');
+var myconsole = require('./myConsole');
 
 var geo_utils = require('./app_utils');
 
@@ -120,7 +121,7 @@ server.get('/', function (req, res, next) {
 
 
 server.listen(SERVER_PORT, function () {
-    console.log("Server listening ...");
+    myconsole.success("Server listening ...");
 });
 
 /** for integration tests with chai */

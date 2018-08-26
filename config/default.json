@@ -4,6 +4,7 @@
     },
     
     "weather_service" :{
+        "data_file" : "http://bulk.openweathermap.org/sample/city.list.json.gz",
         "url" : "http://api.openweathermap.org/data/2.5/weather",
         "api_key" : "dce868f2d5d78510621eeae7bbcf971e"
     }

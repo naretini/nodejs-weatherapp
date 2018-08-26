@@ -19,7 +19,12 @@ $ docker run -p 49163:8080 -d naretini/node-weather-web-app
 $ curl -i localhost:49163
 ```
 
-## Run mocha tests locally
+## Build assets data file
+```bash
+$ npm run-script datasync
+```
+
+## Run mocha/chai tests locally
 ```bash
 $ npm test
 ```

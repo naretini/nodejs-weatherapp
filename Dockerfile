@@ -1,5 +1,10 @@
 FROM node:8
 
+# set our node environment, either development or production
+# defaults to production, compose overrides this to development on build and run
+ARG NODE_ENV=dev
+ENV NODE_ENV $NODE_ENV
+
 # Create app directory
 WORKDIR /usr/src/app
 
@@ -14,6 +19,10 @@ RUN npm install
 
 # Bundle app source
 COPY . .
+
+#Prepare App Data Assets on build (optional)
+#RUN npm run-script datasync
+
 
 EXPOSE 8080
 CMD [ "npm", "start" ]

@@ -3,6 +3,7 @@
  */
 var citiesDb = require('./data/city.list.json');
 var GeoPoint = require('geopoint');
+var myconsole = require('./myConsole');
 
 /**
  * Returns boolean: true if lat lng aren't null and valid
@@ -28,9 +29,9 @@ exports.validCoordinates = (latitude, longitude)  => {
     let MIN_LON = -MAX_LON; // -180 degrees
     let radLat = GeoPoint.degreesToRadians(parseFloat(lat));
     let radLng = GeoPoint.degreesToRadians(parseFloat(lng));
-    // console.log('Lat lng radlat radlng: ', lat, radLat, lng, radLng);
+    // myconsole.info('Lat lng radlat radlng: ', lat, radLat, lng, radLng);
     if (radLat < MIN_LAT || radLat > MAX_LAT || radLng < MIN_LON || radLng > MAX_LON) {
-        console.log('Lat or Lng out of bounds', lat,radLat, lng, radLng);
+        myconsole.err('[ERROR] Lat or Lng out of bounds', lat,radLat, lng, radLng);
         return false;
     }
     return  true;
@@ -55,8 +56,7 @@ exports.getDistance = (lat_frm, lng_frm, lat_to, lng_to, inKm = true) => {
         return distance;
     }
     catch (err) {
-        console.log("----------------------- ERROR ON", err)
-        console.log("lat_frm:", lat_frm, "lng_frm:", lng_frm, "lat_to:", lat_to, "lng_to:", lng_to, "inKm:", inKm )
+        myconsole.err("[ERROR] : lat_frm:", lat_frm, "lng_frm:", lng_frm, "lat_to:", lat_to, "lng_to:", lng_to, "inKm:", inKm )
         return -1; 
     }
     
@@ -75,7 +75,7 @@ exports.getCitiesWithin10KmDistance = (lat_frm, lng_frm) => {
         let distance = module.exports.getDistance(lat_frm,lng_frm,item.coord.lat, item.coord.lon);
 
         if (distance>=0 && distance<10){
-            // console.log(item.name, item.country, item.coord.lat, item.coord.lon)
+            // myconsole.info(item.name, item.country, item.coord.lat, item.coord.lon)
             return true;
         }
         return false;
