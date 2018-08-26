@@ -18,18 +18,16 @@ exports.validCoordinates = (latitude, longitude)  => {
         (lat!=0 && !lat )|| 
         (lng!=0 && !lng) ||
         (isNaN(lat) || isNaN(lng))
-        
     ){
         return false;
     }
 
-    MAX_LAT = Math.PI / 2, // 90 degrees
-    MIN_LAT = -MAX_LAT, // -90 degrees
-    MAX_LON = Math.PI, // 180 degrees
-    MIN_LON = -MAX_LON; // -180 degrees
-
-    radLat = GeoPoint.degreesToRadians(parseFloat(lat));
-    radLng = GeoPoint.degreesToRadians(parseFloat(lng));
+    let MAX_LAT = Math.PI / 2; // 90 degrees
+    let MIN_LAT = -MAX_LAT; // -90 degrees
+    let MAX_LON = Math.PI; // 180 degrees
+    let MIN_LON = -MAX_LON; // -180 degrees
+    let radLat = GeoPoint.degreesToRadians(parseFloat(lat));
+    let radLng = GeoPoint.degreesToRadians(parseFloat(lng));
     // console.log('Lat lng radlat radlng: ', lat, radLat, lng, radLng);
     if (radLat < MIN_LAT || radLat > MAX_LAT || radLng < MIN_LON || radLng > MAX_LON) {
         console.log('Lat or Lng out of bounds', lat,radLat, lng, radLng);
